@@ -1,35 +1,13 @@
 from django.db import models
 from commons.models import createdModel, deletedModel
+from users.models import User
 # Create your models here.
 
 
-class School(createdModel, deletedModel):
-    name = models.TextField(max_length=300)
-    password = models.CharField(max_length=200)
+class School(User,createdModel, deletedModel):
     email = models.EmailField(max_length=200)
     city = models.CharField(max_length=200)
     pincode = models.CharField(max_length=200)
-
-    @staticmethod
-    def get_school_for_login(email, password):
-        try:
-            return School.objects.get(email=email, password=password)
-        except:
-            return False
-
-    @staticmethod
-    def get_school(email):
-        try:
-            return School.objects.get(email=email)
-        except:
-            return False
-
-    @staticmethod
-    def is_duplicate(email):
-        try:
-            return School.objects.get(email=email)
-        except:
-            return False
 
     def __str__(self) -> str:
         return self.name

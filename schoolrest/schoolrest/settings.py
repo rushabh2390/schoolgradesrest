@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'standards',
     'subjects',
     'grades',
-    'commons'
+    'commons',
+    'users'
 ]
 
 MIDDLEWARE = [
