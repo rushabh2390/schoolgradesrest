@@ -11,14 +11,14 @@ class School(createdModel, deletedModel):
     pincode = models.CharField(max_length=200)
 
     @staticmethod
-    def get_user_for_login(email, password):
+    def get_school_for_login(email, password):
         try:
             return School.objects.get(email=email, password=password)
         except:
             return False
 
     @staticmethod
-    def get_user(email):
+    def get_school(email):
         try:
             return School.objects.get(email=email)
         except:
