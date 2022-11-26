@@ -3,14 +3,12 @@ import datetime
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
+    AbstractBaseUser, BaseUserManager
 )
 from django.utils import timezone
 
-# Create your models here.
 
-
-class MyUserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
     def create_user(self, username=None, email=None, password=None, **extra_fields):
         if not email:
             raise ValueError('Email is Required')
@@ -35,17 +33,16 @@ class MyUserManager(BaseUserManager):
 
 class CustomUserModel(AbstractBaseUser):
     username = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
     name = models.CharField(max_length=100, null=True,
                             blank=True, default=None)
-    email = models.EmailField(max_length=100, null=True,
-                              blank=True, default=None, unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
-    objects = MyUserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']

@@ -1,17 +1,28 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .utils import get_tokens_for_user
-from .serializers import RegistrationSerializer, PasswordChangeSerializer
+from .serializers import RegistrationSerializer, PasswordChangeSerializer, LoginSerializer
+from .models import Student
 # Create your views here.
 
 
 class RegistrationView(APIView):
+
+    def get(self, request, format=None):
+        student = {
+            "name": "Student name",
+            "username": "Username(Please enter 'name_rollno')",
+            "email": "student/ParantsE Email Id",
+            "password": "password"
+        }
+        serializer = RegistrationSerializer(student)
+        return Response(serializer.data)
+
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -21,12 +32,22 @@ class RegistrationView(APIView):
 
 
 class LoginView(APIView):
+
+    def get(self, request, format=None):
+        login = {
+            "username": "Username",
+            "password": "password"
+        }
+        serializer = LoginSerializer(login)
+        return Response(serializer.data)
+
     def post(self, request):
-        if 'email' not in request.data or 'password' not in request.data:
+        if 'username' not in request.data or 'password' not in request.data:
             return Response({'msg': 'Credentials missing'}, status=status.HTTP_400_BAD_REQUEST)
-        email = request.POST.get('email', None)
-        password = request.POST.get('password', None)
-        user = authenticate(request, email=email, password=password)
+        username = request.data.get('username', None)
+        password = request.data.get('password', None)
+        print(username, ":", password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             auth_data = get_tokens_for_user(request.user)

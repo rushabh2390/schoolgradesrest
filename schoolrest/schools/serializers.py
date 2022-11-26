@@ -2,11 +2,17 @@ from rest_framework import serializers
 from .models import School
 
 
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = ['username', 'password']
+
+
 class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = School
-        fields = ['name', 'username','email', 'password', 'city', 'pincode']
+        fields = ['name', 'username', 'email', 'password', 'city', 'pincode']
         extra_kwargs = {
             'password': {'write_only': True}
         }

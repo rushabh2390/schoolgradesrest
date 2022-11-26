@@ -4,16 +4,16 @@ from rest_framework import serializers
 from .models import Student
 
 
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['username', 'password']
+
 class RegistrationSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100)
     username = serializers.CharField(max_length=100)
     email = serializers.CharField(max_length=100)
     password = serializers.CharField(max_length=100)
-
-    def get(self, request, format=None):
-        users = Student.objects.all()
-        serializer = UserSerializerWithToken(users, many=True)
-        return Response(serializer.data)
 
     class Meta:
         model = Student
@@ -25,7 +25,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def save(self):
         user = Student(
             name=self.validated_data['name'],
-            username=self.validated_data['username'])
+            username=self.validated_data['username'],
+            email=self.validated_data['email'])
         password = self.validated_data['password']
         user.set_password(password)
         user.save()
